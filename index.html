@@ -14,13 +14,16 @@
     <script type="importmap">
         {
             "imports": {
-                "three": "https://unpkg.com/three@0.160.0/build/three.module.js"
+                "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+                "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
             }
         }
     </script>
 
     <script type="module">
         import * as THREE from 'three';
+        // for controll the object👇
+        import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
         const scene = new THREE.Scene();
 
@@ -34,12 +37,12 @@
         // const geometry = new THREE.BoxGeometry(1, 1, 1);
 
         // Circle 👇
-        const geometry = new THREE.SphereGeometry(2, 32, 16);
+        const geometry = new THREE.SphereGeometry(5, 32, 16);
 
         // Lights not working with MeshBasicMaterial
         // const material = new THREE.MeshBasicMaterial({ color: 1283E5 });
 
-        const material = new THREE.MeshStandardMaterial({ color: 1283E5 });
+        const material = new THREE.MeshStandardMaterial({ color: 0x1283E5 });
 
         const cube = new THREE.Mesh(geometry, material); 
         
@@ -51,11 +54,14 @@
         scene.add(light);
 
         const ambientLight = new THREE.AmbientLight(0x404040); 
-        scene.add(ambientLight);
+        scene.add(ambientLight)
 
+        camera.position.z = 9;
 
+        const controls = new OrbitControls( camera, renderer.domElement );
+        // controls.update() must be called after any manual changes to the camera's transform
 
-        camera.position.z = 5;
+        controls.update();
 
         function animate() {
             requestAnimationFrame(animate);
@@ -63,10 +69,19 @@
             cube.rotation.x += 0.01;
             cube.rotation.y += 0.01;
 
+            controls.update();
             renderer.render(scene, camera);
         }
 
         animate();
+
+        // Window එක Resize කරනකොට 3D Scene එකත් හරියට Resize වෙන්න 👇
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+        
     </script>
 </body>
 </html>
