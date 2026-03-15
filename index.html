@@ -37,12 +37,16 @@
         // const geometry = new THREE.BoxGeometry(1, 1, 1);
 
         // Circle 👇
-        const geometry = new THREE.SphereGeometry(5, 32, 16);
+        const geometry = new THREE.SphereGeometry(5, 64, 64);
 
         // Lights not working with MeshBasicMaterial
         // const material = new THREE.MeshBasicMaterial({ color: 1283E5 });
 
-        const material = new THREE.MeshStandardMaterial({ color: 0x1283E5 });
+        const textureLoader = new THREE.TextureLoader();
+        const earthTexture = textureLoader.load('https://threejs.org/examples/textures/planets/earth_atmos_2048.jpg');
+
+        // const material = new THREE.MeshStandardMaterial({ color: 0x1283E5 });
+        const material = new THREE.MeshStandardMaterial({ map: earthTexture });
 
         const cube = new THREE.Mesh(geometry, material); 
         
@@ -66,8 +70,8 @@
         function animate() {
             requestAnimationFrame(animate);
 
-            cube.rotation.x += 0.01;
-            cube.rotation.y += 0.01;
+            cube.rotation.x += 0.001;
+            cube.rotation.y += 0.001;
 
             controls.update();
             renderer.render(scene, camera);
@@ -75,7 +79,6 @@
 
         animate();
 
-        // Window එක Resize කරනකොට 3D Scene එකත් හරියට Resize වෙන්න 👇
         window.addEventListener('resize', () => {
             camera.aspect = window.innerWidth / window.innerHeight;
             camera.updateProjectionMatrix();
